@@ -1,0 +1,45 @@
+<UserControl x:Class="MuralInstitucional.Controls.AnnouncementCard"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:local="clr-namespace:MuralInstitucional.Controls">
+ <Border Margin="6" Background="White" CornerRadius="12" Padding="0" VerticalAlignment="Top">
+  <StackPanel>
+   <local:SquareMediaPanel x:Name="MediaSquare" Background="#E4EAF2" ClipToBounds="True">
+    <local:CoverImage x:Name="Poster" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+    <MediaElement x:Name="Video" LoadedBehavior="Manual" UnloadedBehavior="Close" Stretch="UniformToFill" Volume="0.5"
+      MediaFailed="Video_Failed" MediaEnded="Video_Ended" MediaOpened="Video_Opened" Visibility="Collapsed"/>
+    <TextBlock x:Name="MediaMessage" Text="Selecione um vídeo local" HorizontalAlignment="Center" VerticalAlignment="Center"
+       Margin="18" TextWrapping="Wrap" TextAlignment="Center" Foreground="#334765"/>
+    <Button x:Name="LinkSurface" Background="Transparent" BorderThickness="0" Padding="0" Margin="0" Click="Link_Click"
+      ToolTip="Abrir link no navegador padrão" AutomationProperties.Name="Abrir link do comunicado" Visibility="Collapsed">
+     <Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}"/></ControlTemplate></Button.Template>
+    </Button>
+    <Border x:Name="LinkBadge" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10" Background="#EFFFFFFF" CornerRadius="8" Padding="8,4" IsHitTestVisible="False" Visibility="Collapsed">
+     <TextBlock Text="↗ Link externo" Foreground="#193456" FontSize="11"/>
+    </Border>
+   </local:SquareMediaPanel>
+   <StackPanel Margin="10,8,10,4">
+   <DockPanel Margin="0,0,0,4">
+    <Button Content="⋯" DockPanel.Dock="Right" Click="Options_Click" ToolTip="Opções do anúncio" Padding="6,0">
+     <Button.ContextMenu><ContextMenu><MenuItem Header="Editar" Click="Edit_Click"/><MenuItem Header="Excluir…" Click="Delete_Click"/></ContextMenu></Button.ContextMenu>
+    </Button>
+    <TextBlock Text="{Binding OriginLabel}" Foreground="#69788C" FontSize="9" VerticalAlignment="Center"/>
+   </DockPanel>
+   <TextBlock Text="{Binding Title}" TextWrapping="Wrap" FontSize="17" FontWeight="SemiBold" Foreground="#193456" Margin="0,0,0,4"/>
+   <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Foreground="#526078" FontSize="12"/>
+   <TextBlock Text="{Binding PublishedAt, StringFormat={}{0:dd/MM/yyyy}}" Foreground="#69788C" FontSize="11" Margin="0,5,0,6"/>
+   <WrapPanel>
+    <Button Content="{Binding LikeLabel}" Click="Like_Click" ToolTip="Alternar curtida local demonstrativa" AutomationProperties.Name="Curtir ou descurtir"/>
+    <Button Content="{Binding CommentLabel}" Click="Comments_Click"/>
+   </WrapPanel>
+   <WrapPanel x:Name="VideoActions" Visibility="Collapsed">
+    <Button x:Name="PlayButton" Content="▶ Reproduzir" Click="Play_Click" IsEnabled="False"/>
+    <Button x:Name="PauseButton" Content="Ⅱ Pausar" Click="Pause_Click" IsEnabled="False"/>
+    <Button x:Name="RestartButton" Content="↺ Reiniciar" Click="Restart_Click" IsEnabled="False"/>
+    <Button Content="Vídeo demonstrativo" Click="DemoVideo_Click"/>
+    <Button Content="Escolher vídeo…" Click="ChooseVideo_Click"/>
+   </WrapPanel>
+   </StackPanel>
+  </StackPanel>
+ </Border>
+</UserControl>

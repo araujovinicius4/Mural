@@ -1,0 +1,42 @@
+<Window x:Class="MuralInstitucional.MainWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ xmlns:controls="clr-namespace:MuralInstitucional.Controls"
+ Title="Mural Institucional — cadastro local" Width="1000" Height="760" MinWidth="320" MinHeight="480" Background="#EFF3F8" WindowStartupLocation="Manual">
+ <Window.Resources><Style TargetType="Button"><Setter Property="Padding" Value="10,7"/><Setter Property="Margin" Value="0,0,6,4"/><Setter Property="Background" Value="#F1F5FA"/><Setter Property="Foreground" Value="#193456"/><Setter Property="BorderBrush" Value="#D5DFEC"/></Style></Window.Resources>
+ <Grid Margin="12">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+  <StackPanel Margin="4,0,4,6">
+   <WrapPanel VerticalAlignment="Center">
+    <TextBlock Text="Mural Institucional" FontSize="24" FontWeight="SemiBold" Foreground="#193456" Margin="0,0,20,4" VerticalAlignment="Center"/>
+    <Button Content="+ Novo anúncio" Click="NewAnnouncement_Click" IsEnabled="{Binding CanManageUsers}"/>
+    <Button Content="Configurações" Click="Settings_Click"/>
+    <Button Content="—" Click="Minimize_Click" ToolTip="Minimizar" AutomationProperties.Name="Minimizar"/>
+   </WrapPanel>
+   <TextBlock Text="{Binding Notice}" TextWrapping="Wrap" FontSize="11" Foreground="#526078"/>
+  </StackPanel>
+  <Border x:Name="SettingsPanel" Grid.Row="1" Visibility="Collapsed" Background="#DFE8F4" Padding="10" Margin="0,0,0,8" CornerRadius="8">
+   <StackPanel>
+    <TextBlock Text="Cadastro e interações neste perfil local. Não é publicação institucional multiusuário." TextWrapping="Wrap"/>
+    <WrapPanel Margin="0,8,0,4">
+     <Button x:Name="PinButton" Content="Fixar ao desktop" Click="Pin_Click" IsEnabled="False" ToolTip="Fixação não validada; permanece desabilitada."/>
+     <Button x:Name="UnpinButton" Content="Desafixar" Click="Unpin_Click" IsEnabled="False"/>
+     <Button Content="Reposicionar à direita" Click="Position_Click"/>
+     <Button Content="Fechar mural" Click="Close_Click"/>
+    </WrapPanel>
+    <TextBlock x:Name="StatusText" TextWrapping="Wrap"/>
+    <Expander Header="Arquivos e diagnóstico" Margin="0,6,0,0"><StackPanel>
+     <TextBlock Text="Exemplos:"/><TextBlock Text="{Binding DataPath}" TextWrapping="Wrap" FontSize="11"/>
+     <TextBlock Text="Anúncios cadastrados:" Margin="0,4,0,0"/><TextBlock Text="{Binding UserDataPath}" TextWrapping="Wrap" FontSize="11"/>
+     <TextBlock Text="Mídia gerenciada:" Margin="0,4,0,0"/><TextBlock Text="{Binding MediaDirectory}" TextWrapping="Wrap" FontSize="11"/>
+     <TextBlock x:Name="DiagnosticPathText" TextWrapping="Wrap" FontSize="11" Margin="0,4,0,0"/>
+    </StackPanel></Expander>
+   </StackPanel>
+  </Border>
+  <ScrollViewer x:Name="BoardScroll" Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" ScrollChanged="Board_ScrollChanged" SizeChanged="Board_SizeChanged">
+   <ItemsControl x:Name="Cards" ItemsSource="{Binding Announcements}" HorizontalContentAlignment="Stretch">
+    <ItemsControl.ItemsPanel><ItemsPanelTemplate><controls:ResponsiveCardPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+    <ItemsControl.ItemTemplate><DataTemplate><controls:AnnouncementCard/></DataTemplate></ItemsControl.ItemTemplate>
+   </ItemsControl>
+  </ScrollViewer>
+ </Grid>
+</Window>

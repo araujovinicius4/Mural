@@ -1,0 +1,15 @@
+<Window x:Class="MuralInstitucional.RecoveryWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="Controle do Mural" Width="440" Height="330" ResizeMode="CanMinimize"
+ WindowStartupLocation="CenterScreen" Background="#EFF3F8">
+ <StackPanel Margin="20">
+  <TextBlock Text="Você consegue ver os cartões?" FontSize="21" FontWeight="SemiBold" TextWrapping="Wrap"/>
+  <TextBlock x:Name="Explanation" Margin="0,12,0,16" TextWrapping="Wrap"
+   Text="A fixação está em teste. Se o mural desaparecer, restaure a janela por este controle ou pelos atalhos."/>
+  <Button x:Name="ConfirmButton" Content="Estou vendo os cartões" Padding="12,8" Margin="0,0,0,8" Click="Confirm_Click"/>
+  <Button Content="Desafixar e restaurar janela" Padding="12,8" Margin="0,0,0,8" Click="Restore_Click"/>
+  <Button Content="Fechar o mural" Padding="12,8" Click="CloseMural_Click"/>
+  <TextBlock Text="Ctrl+Alt+Shift+F12 restaura • Ctrl+Alt+Shift+F11 fecha" Margin="0,12,0,0" TextWrapping="Wrap" FontSize="12"/>
+ </StackPanel>
+</Window>
