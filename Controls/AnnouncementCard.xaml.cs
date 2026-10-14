@@ -98,6 +98,8 @@ public partial class AnnouncementCard : UserControl
         group.Freeze();
         return new DrawingImage(group);
     }
+    private void CooperationInterest_Click(object sender, RoutedEventArgs e)
+    { if (announcement is not null) Board?.ToggleCooperationInterest(announcement); }
     private void Like_Click(object sender, RoutedEventArgs e) { if (announcement is not null) Board?.ToggleLike(announcement); }
     private void Comments_Click(object sender, RoutedEventArgs e)
     {

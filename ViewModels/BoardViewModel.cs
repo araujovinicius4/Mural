@@ -76,6 +76,23 @@ public sealed class BoardViewModel : INotifyPropertyChanged
             { Notice = "Cadastro bloqueado para preservar os dados existentes: " + ex.Message; }
         }
     }
+    public bool ToggleCooperationInterest(Announcement item)
+    {
+        if (!Announcements.Contains(item) || !item.CanCooperate) return false;
+        return item.HasCooperationInterest ? CancelCooperationInterest(item) : RegisterCooperationInterest(item);
+    }
+    public bool RegisterCooperationInterest(Announcement item)
+    {
+        if (!Announcements.Contains(item) || !CooperationInterestService.Register(item)) return false;
+        Save();
+        return true;
+    }
+    public bool CancelCooperationInterest(Announcement item)
+    {
+        if (!Announcements.Contains(item) || !CooperationInterestService.Cancel(item)) return false;
+        Save();
+        return true;
+    }
     public void ToggleLike(Announcement item)
     {
         item.LikedLocally = !item.LikedLocally;

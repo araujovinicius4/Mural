@@ -28,7 +28,7 @@ public sealed class AnnouncementManagementService(IAnnouncementRepository reposi
             Id = original?.Id ?? Guid.NewGuid(), IsExample = isExample, Title = draft.Title.Trim(), Description = draft.Description?.Trim(),
             Type = draft.Type!.Value, MediaKind = draft.Kind, MediaPath = path, ExternalUrl = string.IsNullOrWhiteSpace(draft.Url) ? null : draft.Url.Trim(),
             InitialLikes = original?.InitialLikes ?? 0, LikedLocally = original?.LikedLocally ?? false,
-            Comments = original?.Comments ?? [], PublishedAt = original?.PublishedAt ?? DateTimeOffset.Now
+            CooperationInterest = original?.CooperationInterest, Comments = original?.Comments ?? [], PublishedAt = original?.PublishedAt ?? DateTimeOffset.Now
         };
         var items = existing.Where(x => x.IsExample == isExample && x.Id != result.Id).ToList(); items.Insert(0, result);
         try { repository.Save(items); }

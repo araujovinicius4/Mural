@@ -24,7 +24,7 @@ internal static class ClassificationChecks
                 }
             document.Announcements[0].LikedLocally = true;
             var legacy = JsonSerializer.SerializeToNode(document)!;
-            foreach (var item in legacy["Announcements"]!.AsArray()) item!.AsObject().Remove("Type");
+            foreach (var item in legacy["Announcements"]!.AsArray()) { item!.AsObject().Remove("Type"); item.AsObject().Remove("CooperationInterest"); }
             string path = Path.Combine(directory, "announcements.json");
             File.WriteAllText(path, legacy.ToJsonString());
             var repo = new AnnouncementRepository(directory, kind);
@@ -34,7 +34,7 @@ internal static class ClassificationChecks
             var migrated = JsonNode.Parse(File.ReadAllText(path))!;
             check(migrated["Announcements"]!.AsArray().All(x => x!["Type"]!.GetValue<string>() == "Comunicado"),
                 "Migração " + kind + ": categoria gravada ao abrir");
-            foreach (var item in migrated["Announcements"]!.AsArray()) item!.AsObject().Remove("Type");
+            foreach (var item in migrated["Announcements"]!.AsArray()) { item!.AsObject().Remove("Type"); item.AsObject().Remove("CooperationInterest"); }
             check(JsonNode.DeepEquals(legacy, migrated), "Migração " + kind + ": todos os dados antigos preservados");
             var reopened = new AnnouncementRepository(directory, kind).Load(out _);
             check(reopened.Announcements[0].LikedLocally && reopened.Announcements[0].Comments.Count == 1,

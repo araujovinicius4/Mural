@@ -29,6 +29,14 @@ public sealed class Announcement : INotifyPropertyChanged
         get => liked;
         set { liked = value; Changed(); Changed(nameof(LikeCount)); Changed(nameof(LikeLabel)); }
     }
+    private LocalCooperationInterest? cooperationInterest;
+    public LocalCooperationInterest? CooperationInterest
+    {
+        get => cooperationInterest;
+        set { cooperationInterest = value; Changed(); Changed(nameof(HasCooperationInterest)); }
+    }
+    [JsonIgnore] public bool HasCooperationInterest => CooperationInterest is not null;
+    [JsonIgnore] public bool CanCooperate => Type is AnnouncementType.Demanda or AnnouncementType.Oferta;
     public DateTimeOffset PublishedAt { get; set; }
     public ObservableCollection<DemoComment> Comments { get; set; } = [];
     [JsonIgnore] public int LikeCount => InitialLikes + (LikedLocally ? 1 : 0);
