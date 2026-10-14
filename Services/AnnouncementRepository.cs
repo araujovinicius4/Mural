@@ -85,7 +85,7 @@ public sealed class AnnouncementRepository : IAnnouncementRepository
         {
             if (item is null || item.Id == Guid.Empty || !ids.Add(item.Id) || string.IsNullOrWhiteSpace(item.Title)
                 || item.Title.Length > 200 || item.InitialLikes < 0 || item.InitialLikes > 1_000_000
-                || !Enum.IsDefined(item.MediaKind) || item.Comments is null || item.Comments.Count > 500
+                || !Enum.IsDefined(item.Type) || !Enum.IsDefined(item.MediaKind) || item.Comments is null || item.Comments.Count > 500
                 || item.Comments.Any(c => c is null || c.Id == Guid.Empty || c.AnnouncementId != item.Id
                     || string.IsNullOrWhiteSpace(c.Text) || c.Text.Length > 1000))
                 throw new InvalidDataException("Publicação demonstrativa inválida.");

@@ -3,3 +3,11 @@ obj/
 .vs/
 *.user
 *.suo
+
+# Dados sensíveis e locais
+.env
+.env.*
+!.env.example
+*.pfx
+*.key
+*.log

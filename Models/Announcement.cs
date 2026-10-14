@@ -12,6 +12,10 @@ public sealed class Announcement : INotifyPropertyChanged
     public Guid Id { get; set; }
     [JsonIgnore] public bool IsExample { get; set; } = true;
     [JsonIgnore] public string OriginLabel => IsExample ? "EXEMPLO DEMONSTRATIVO" : "CADASTRADO NESTE PERFIL";
+    // Legacy JSON without Type defaults to Comunicado and is migrated on save.
+    public AnnouncementType Type { get; set; } = AnnouncementType.Comunicado;
+    [JsonIgnore] public string TypeLabel => AnnouncementTypes.Name(Type);
+    [JsonIgnore] public string TypeColor => AnnouncementTypes.Color(Type);
     public string Title { get; set; } = "";
     public string? Description { get; set; }
     public MediaKind MediaKind { get; set; }

@@ -1,8 +1,8 @@
-﻿# Mural Institucional — diagnóstico da fixação
+# Mural Institucional — diagnóstico da fixação
 
 Projeto WPF existente em .NET 10. A interface convencional permanece funcional; a fixação em WorkerW é experimental e não foi validada visualmente.
 
-> **Etapa atual: cadastro e gerenciamento local de anúncios.** Novo anúncio, edição, exclusão confirmada e cópia de mídia para o perfil estão disponíveis. Resultados e testes manuais: [VALIDACAO_GERENCIAMENTO_ANUNCIOS.md](VALIDACAO_GERENCIAMENTO_ANUNCIOS.md). Foram aprovadas 64 verificações automatizadas. Fixar está desabilitado em todas as execuções, incluindo `--probe`. As instruções de fixação abaixo são histórico; não habilitam nem validam integração nesta versão. Dados e diagnósticos ficam em `%LOCALAPPDATA%\MuralInstitucional`, sem gravação na instalação. O histórico do mural está em [VALIDACAO_MURAL_INTERATIVO.md](VALIDACAO_MURAL_INTERATIVO.md).
+> **Etapa atual: classificação e gerenciamento local de anúncios.** Tipo obrigatório (Demanda, Oferta ou Comunicado), selo colorido, filtros no cabeçalho e migração dos registros antigos para Comunicado. Validação atual: 87 verificações aprovadas; detalhes e testes manuais pendentes em [VALIDACAO_CLASSIFICACAO_ANUNCIOS.md](VALIDACAO_CLASSIFICACAO_ANUNCIOS.md). Novo anúncio, edição, exclusão confirmada e cópia de mídia para o perfil estão disponíveis. Resultados e testes manuais: [VALIDACAO_GERENCIAMENTO_ANUNCIOS.md](VALIDACAO_GERENCIAMENTO_ANUNCIOS.md). A etapa anterior aprovou 64 verificações automatizadas. Fixar está desabilitado em todas as execuções, incluindo `--probe`. As instruções de fixação abaixo são histórico; não habilitam nem validam integração nesta versão. Dados e diagnósticos ficam em `%LOCALAPPDATA%\MuralInstitucional`, sem gravação na instalação. O histórico do mural está em [VALIDACAO_MURAL_INTERATIVO.md](VALIDACAO_MURAL_INTERATIVO.md).
 
 ## Executar
 

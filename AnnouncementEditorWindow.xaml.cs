@@ -16,6 +16,8 @@ public partial class AnnouncementEditorWindow : Window
     public AnnouncementEditorWindow(BoardViewModel board, Announcement? original = null)
     {
         InitializeComponent(); this.board = board; this.original = original;
+        TypeInput.ItemsSource = AnnouncementTypes.Choices;
+        TypeInput.SelectedValue = original?.Type;
         if (original is not null)
         {
             Heading.Text = original.IsExample ? "Editar exemplo demonstrativo" : "Editar anúncio";
@@ -58,7 +60,7 @@ public partial class AnnouncementEditorWindow : Window
     {
         try
         {
-            board.SaveAnnouncement(original, new AnnouncementDraft(TitleInput.Text, DescriptionInput.Text, Kind, selectedPath, UrlInput.Text));
+            board.SaveAnnouncement(original, new AnnouncementDraft(TitleInput.Text, DescriptionInput.Text, Kind, selectedPath, UrlInput.Text, TypeInput.SelectedValue is AnnouncementType type ? type : null));
             DialogResult = true;
         }
         catch (Exception ex) when (IsExpected(ex)) { ErrorText.Text = "Não foi possível salvar: " + ex.Message; }

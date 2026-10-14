@@ -12,6 +12,11 @@
     <Button Content="Configurações" Click="Settings_Click"/>
     <Button Content="—" Click="Minimize_Click" ToolTip="Minimizar" AutomationProperties.Name="Minimizar"/>
    </WrapPanel>
+   <ListBox ItemsSource="{Binding TypeFilters}" SelectedItem="{Binding SelectedTypeFilter, Mode=TwoWay}" DisplayMemberPath="Name"
+     BorderThickness="0" Background="Transparent" Margin="0,4,0,6" ScrollViewer.HorizontalScrollBarVisibility="Disabled" AutomationProperties.Name="Filtrar por tipo de anúncio">
+    <ListBox.ItemsPanel><ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate></ListBox.ItemsPanel>
+    <ListBox.ItemContainerStyle><Style TargetType="ListBoxItem"><Setter Property="Padding" Value="10,6"/><Setter Property="Margin" Value="0,0,6,4"/></Style></ListBox.ItemContainerStyle>
+   </ListBox>
    <TextBlock Text="{Binding Notice}" TextWrapping="Wrap" FontSize="11" Foreground="#526078"/>
   </StackPanel>
   <Border x:Name="SettingsPanel" Grid.Row="1" Visibility="Collapsed" Background="#DFE8F4" Padding="10" Margin="0,0,0,8" CornerRadius="8">
@@ -33,7 +38,7 @@
    </StackPanel>
   </Border>
   <ScrollViewer x:Name="BoardScroll" Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" ScrollChanged="Board_ScrollChanged" SizeChanged="Board_SizeChanged">
-   <ItemsControl x:Name="Cards" ItemsSource="{Binding Announcements}" HorizontalContentAlignment="Stretch">
+   <ItemsControl x:Name="Cards" ItemsSource="{Binding VisibleAnnouncements}" HorizontalContentAlignment="Stretch">
     <ItemsControl.ItemsPanel><ItemsPanelTemplate><controls:ResponsiveCardPanel/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
     <ItemsControl.ItemTemplate><DataTemplate><controls:AnnouncementCard/></DataTemplate></ItemsControl.ItemTemplate>
    </ItemsControl>

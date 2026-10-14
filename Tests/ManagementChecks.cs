@@ -18,23 +18,23 @@ internal static class ManagementChecks
         var media = new ManagedMediaService(Path.Combine(root, "media"));
         var demos = new AnnouncementRepository(Path.Combine(root, "demos"));
         var board = new BoardViewModel(demos, users, media);
-        var draft = new AnnouncementDraft("  Primeiro anúncio  ", "Descrição", MediaKind.Image, image, "https://example.org");
+        var draft = new AnnouncementDraft("  Primeiro anúncio  ", "Descrição", MediaKind.Image, image, "https://example.org", AnnouncementType.Demanda);
         var added = board.SaveAnnouncement(null, draft);
         check(!added.IsExample && added.Title == "Primeiro anúncio" && added.Id != Guid.Empty && media.Owns(added.MediaPath)
             && File.Exists(added.MediaPath) && added.MediaPath != image, "Cadastro de imagem copia mídia com ID único e separa dos exemplos");
         File.Move(image, image + ".moved");
         check(File.Exists(added.MediaPath), "Mover original não quebra mídia gerenciada");
         board.ToggleLike(added); board.AddComment(added, "Comentário preservado");
-        var edited = board.SaveAnnouncement(added, draft with { Title = "Editado", Path = added.MediaPath! });
-        check(edited.Id == added.Id && edited.LikedLocally && edited.LikeCount == 1 && edited.Comments.Count == 1
+        var edited = board.SaveAnnouncement(added, draft with { Title = "Editado", Path = added.MediaPath!, Type = AnnouncementType.Comunicado });
+        check(added.Type == AnnouncementType.Demanda && edited.Type == AnnouncementType.Comunicado && edited.Id == added.Id && edited.LikedLocally && edited.LikeCount == 1 && edited.Comments.Count == 1
             && edited.Comments[0].AnnouncementId == edited.Id && edited.MediaPath == added.MediaPath, "Edição preserva ID, curtida, comentários e arquivo sem cópia desnecessária");
-        var videoItem = board.SaveAnnouncement(null, new AnnouncementDraft("Vídeo", null, MediaKind.Video, video, null));
-        check(media.Owns(videoItem.MediaPath) && File.Exists(videoItem.MediaPath), "Cadastro de vídeo copia AVI local sem reprodução");
+        var videoItem = board.SaveAnnouncement(null, new AnnouncementDraft("Vídeo", null, MediaKind.Video, video, null, AnnouncementType.Oferta));
+        check(videoItem.Type == AnnouncementType.Oferta && media.Owns(videoItem.MediaPath) && File.Exists(videoItem.MediaPath), "Cadastro de vídeo copia AVI local sem reprodução");
         var reopened = new BoardViewModel(new AnnouncementRepository(Path.Combine(root, "demos")),
             new AnnouncementRepository(Path.Combine(root, "users"), "local-user"), media);
-        check(reopened.Announcements.Count(x => !x.IsExample) == 2 && reopened.Announcements.First(x => x.Id == edited.Id).Comments.Count == 1,
+        check(reopened.Announcements.Count(x => !x.IsExample) == 2 && reopened.Announcements.First(x => x.Id == edited.Id).Comments.Count == 1 && reopened.Announcements.First(x => x.Id == edited.Id).Type == AnnouncementType.Comunicado,
             "Cadastros e interações persistem ao reabrir, separados dos nove exemplos");
-        var replaced = board.SaveAnnouncement(edited, new AnnouncementDraft("Imagem vira vídeo", null, MediaKind.Video, video, null));
+        var replaced = board.SaveAnnouncement(edited, new AnnouncementDraft("Imagem vira vídeo", null, MediaKind.Video, video, null, AnnouncementType.Oferta));
         check(replaced.Id == edited.Id && replaced.LikedLocally && replaced.Comments.Count == 1 && !File.Exists(edited.MediaPath),
             "Troca de mídia preserva interações e remove somente cópia antiga após commit");
         board.DeleteAnnouncement(replaced);
@@ -56,7 +56,7 @@ internal static class ManagementChecks
         File.Delete(large);
         int before = Directory.GetFiles(media.DirectoryPath).Length;
         var fail = new AnnouncementManagementService(new WriteFailure(), media);
-        try { fail.Save([], null, new AnnouncementDraft("Falha", null, MediaKind.Video, video, null)); } catch (IOException) { }
+        try { fail.Save([], null, new AnnouncementDraft("Falha", null, MediaKind.Video, video, null, AnnouncementType.Oferta)); } catch (IOException) { }
         check(Directory.GetFiles(media.DirectoryPath).Length == before, "Falha de commit desfaz nova cópia de mídia");
         try { fail.Delete([videoItem], videoItem); } catch (IOException) { }
         check(File.Exists(videoItem.MediaPath), "Falha de exclusão JSON preserva mídia existente");
@@ -72,7 +72,7 @@ internal static class ManagementChecks
         check(!blocked.CanManageUsers && File.ReadAllText(broken) == "{quebrado", "JSON de cadastro corrompido preservado com gerenciamento bloqueado");
         var example = board.Announcements.First(x => x.IsExample);
         board.ToggleLike(example); board.AddComment(example, "Interação do exemplo");
-        var editedExample = board.SaveAnnouncement(example, new AnnouncementDraft("Exemplo editado", null, MediaKind.Video, video, null));
+        var editedExample = board.SaveAnnouncement(example, new AnnouncementDraft("Exemplo editado", null, MediaKind.Video, video, null, AnnouncementType.Oferta));
         check(editedExample.IsExample && editedExample.Id == example.Id && editedExample.LikedLocally && editedExample.Comments.Count == 2
             && new AnnouncementRepository(Path.Combine(root, "users"), "local-user").Load(out _).Announcements.Count == 1,
             "Editar exemplo preserva interações e classificação sem misturar cadastros");

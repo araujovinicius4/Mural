@@ -157,6 +157,7 @@ internal static class Program
             Check(closes == 1 && transport.State == VideoPlaybackState.Unavailable && !transport.CanPlay && !transport.CanPause && !transport.CanRestart,
                 "Fechamento/falha indisponibiliza comandos sem playback automático");
             ManagementChecks.Run(root, Check);
+            ClassificationChecks.Run(root, Check);
             Console.WriteLine($"{checks} verificações concluídas. Sem Explorer, navegador ou reprodução de vídeo.");
             return 0;
         }

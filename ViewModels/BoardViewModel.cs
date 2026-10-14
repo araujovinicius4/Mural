@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Windows.Data;
 using MuralInstitucional.Models;
 using MuralInstitucional.Services;
 
@@ -16,6 +17,20 @@ public sealed class BoardViewModel : INotifyPropertyChanged
     public string UserDataPath => users?.DataPath ?? "Cadastro não disponível";
     public string MediaDirectory => media?.DirectoryPath ?? "";
     public ObservableCollection<Announcement> Announcements { get; } = [];
+    public ICollectionView VisibleAnnouncements { get; }
+    public IReadOnlyList<AnnouncementTypeOption> TypeFilters => AnnouncementTypes.Filters;
+    private AnnouncementTypeOption selectedTypeFilter = AnnouncementTypes.Filters[0];
+    public AnnouncementTypeOption SelectedTypeFilter
+    {
+        get => selectedTypeFilter;
+        set
+        {
+            if (value is null || !TypeFilters.Contains(value)) return;
+            selectedTypeFilter = value;
+            VisibleAnnouncements.Refresh();
+            PropertyChanged?.Invoke(this, new(nameof(SelectedTypeFilter)));
+        }
+    }
     private string notice = "";
     public string Notice { get => notice; private set { notice = value; PropertyChanged?.Invoke(this, new(nameof(Notice))); } }
     public string DataPath => repository.DataPath;
@@ -23,6 +38,8 @@ public sealed class BoardViewModel : INotifyPropertyChanged
     private bool saveFailed;
     public BoardViewModel(IAnnouncementRepository repository, IAnnouncementRepository? users = null, ManagedMediaService? media = null)
     {
+        VisibleAnnouncements = new ListCollectionView(Announcements);
+        VisibleAnnouncements.Filter = item => selectedTypeFilter.Value is null || ((Announcement)item).Type == selectedTypeFilter.Value;
         this.repository = repository;
         this.users = users;
         this.media = media;
@@ -50,6 +67,7 @@ public sealed class BoardViewModel : INotifyPropertyChanged
                     throw new InvalidDataException("Identificadores repetidos entre exemplos e anúncios cadastrados.");
                 int insertion = 0;
                 foreach (var item in document.Announcements) { item.IsExample = false; Announcements.Insert(insertion++, item); }
+                users.Save(document.Announcements);
                 usersLoaded = true;
                 if (Notice.StartsWith("Interações demonstrativas", StringComparison.Ordinal))
                     Notice = "Cadastro neste perfil local • exemplos identificados nos cartões • sem autenticação ou publicação multiusuário.";
@@ -76,7 +94,7 @@ public sealed class BoardViewModel : INotifyPropertyChanged
     {
         if (media is not null)
         {
-            SaveAnnouncement(item, new AnnouncementDraft(item.Title, item.Description, MediaKind.Video, path, item.ExternalUrl));
+            SaveAnnouncement(item, new AnnouncementDraft(item.Title, item.Description, MediaKind.Video, path, item.ExternalUrl, item.Type));
             return;
         }
         item.MediaPath = path;

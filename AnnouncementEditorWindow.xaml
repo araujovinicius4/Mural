@@ -7,6 +7,7 @@
    <TextBlock Text="Cadastro neste perfil. Sem publicação multiusuário ou autenticação." TextWrapping="Wrap" Margin="0,6,0,16"/>
    <TextBlock Text="Título * (até 200 caracteres)"/><TextBox x:Name="TitleInput" MaxLength="200" Margin="0,5,0,12" Padding="8"/>
    <TextBlock Text="Descrição (opcional, até 2.000 caracteres)"/><TextBox x:Name="DescriptionInput" MaxLength="2000" TextWrapping="Wrap" AcceptsReturn="True" Height="80" VerticalScrollBarVisibility="Auto" Margin="0,5,0,12"/>
+   <TextBlock Text="Tipo de anúncio *"/><ComboBox x:Name="TypeInput" DisplayMemberPath="Name" SelectedValuePath="Value" Margin="0,5,0,12" AutomationProperties.Name="Tipo de anúncio obrigatório"/>
    <TextBlock Text="Tipo de mídia"/><ComboBox x:Name="KindInput" SelectedIndex="0" SelectionChanged="Kind_Changed" Margin="0,5,0,10"><ComboBoxItem Content="Imagem"/><ComboBoxItem Content="Vídeo"/></ComboBox>
    <Button Content="Selecionar arquivo local…" Click="Select_Click" Padding="10,7" HorizontalAlignment="Left"/>
    <TextBlock x:Name="FileLabel" Text="Nenhum arquivo selecionado" TextWrapping="Wrap" Margin="0,8,0,10"/>
