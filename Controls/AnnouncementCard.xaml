@@ -34,7 +34,20 @@
    <TextBlock Text="{Binding Description}" TextWrapping="Wrap" Foreground="#526078" FontSize="12"/>
    <TextBlock Text="{Binding PublishedAt, StringFormat={}{0:dd/MM/yyyy}}" Foreground="#69788C" FontSize="11" Margin="0,5,0,6"/>
    <WrapPanel>
-    <Button Content="{Binding LikeLabel}" Click="Like_Click" ToolTip="Alternar curtida local demonstrativa" AutomationProperties.Name="Curtir ou descurtir"/>
+    <Button Click="Like_Click" ToolTip="Alternar curtida local demonstrativa" AutomationProperties.Name="Curtir ou descurtir">
+     <StackPanel Orientation="Horizontal">
+      <Path Width="20" Height="20" Stretch="Uniform" Stroke="#E53935" StrokeThickness="1.6" Margin="0,0,5,0" VerticalAlignment="Center"
+        Data="M 12,21 C 10,19 2,13 2,7.5 C 2,2 9,0 12,5 C 15,0 22,2 22,7.5 C 22,13 14,19 12,21 Z">
+       <Path.Style><Style TargetType="Path">
+        <Setter Property="Fill" Value="Transparent"/>
+        <Style.Triggers><DataTrigger Binding="{Binding LikedLocally}" Value="True">
+         <Setter Property="Fill" Value="#E53935"/>
+        </DataTrigger></Style.Triggers>
+       </Style></Path.Style>
+      </Path>
+      <TextBlock Text="{Binding LikeCount}" VerticalAlignment="Center"/>
+     </StackPanel>
+    </Button>
     <Button Content="{Binding CommentLabel}" Click="Comments_Click"/>
    </WrapPanel>
    <StackPanel x:Name="CooperationActions" Margin="0,4,0,6" Visibility="{Binding CanCooperate, Converter={StaticResource BooleanVisibility}}">

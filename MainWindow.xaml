@@ -3,13 +3,31 @@
  xmlns:controls="clr-namespace:MuralInstitucional.Controls"
  Title="Mural Institucional — cadastro local" Width="1000" Height="760" MinWidth="320" MinHeight="480" Background="#EFF3F8" WindowStartupLocation="Manual">
  <Window.Resources><Style TargetType="Button"><Setter Property="Padding" Value="10,7"/><Setter Property="Margin" Value="0,0,6,4"/><Setter Property="Background" Value="#F1F5FA"/><Setter Property="Foreground" Value="#193456"/><Setter Property="BorderBrush" Value="#D5DFEC"/></Style></Window.Resources>
+ <WindowChrome.WindowChrome>
+  <WindowChrome CaptionHeight="36" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="0" UseAeroCaptionButtons="False"/>
+ </WindowChrome.WindowChrome>
+ <DockPanel>
+  <Border DockPanel.Dock="Top" Background="#DFE8F4" Height="36">
+   <Grid>
+    <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}" Margin="12,0,100,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+     <Button x:Name="CaptionMinimizeButton" Content="&#x2014;" Click="Minimize_Click" ToolTip="Minimizar" AutomationProperties.Name="Minimizar" WindowChrome.IsHitTestVisibleInChrome="True"/>
+     <Button x:Name="CaptionMaximizeButton" Content="&#x25A1;" Click="MaximizeRestore_Click" ToolTip="Maximizar ou restaurar" AutomationProperties.Name="Maximizar ou restaurar" WindowChrome.IsHitTestVisibleInChrome="True"/>
+    </StackPanel>
+   </Grid>
+  </Border>
  <Grid Margin="12">
   <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
   <StackPanel Margin="4,0,4,6">
    <WrapPanel VerticalAlignment="Center">
     <TextBlock Text="Mural Institucional" FontSize="24" FontWeight="SemiBold" Foreground="#193456" Margin="0,0,20,4" VerticalAlignment="Center"/>
     <Button Content="+ Novo anúncio" Click="NewAnnouncement_Click" IsEnabled="{Binding CanManageUsers}"/>
-    <Button Content="Configurações" Click="Settings_Click"/>
+    <Button Click="Settings_Click" AutomationProperties.Name="Configurações">
+     <StackPanel Orientation="Horizontal">
+      <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center"/>
+      <TextBlock Text="Configurações" VerticalAlignment="Center"/>
+     </StackPanel>
+    </Button>
     <Button Content="—" Click="Minimize_Click" ToolTip="Minimizar" AutomationProperties.Name="Minimizar"/>
    </WrapPanel>
    <ListBox ItemsSource="{Binding TypeFilters}" SelectedItem="{Binding SelectedTypeFilter, Mode=TwoWay}" DisplayMemberPath="Name"
@@ -26,7 +44,7 @@
      <Button x:Name="PinButton" Content="Fixar ao desktop" Click="Pin_Click" IsEnabled="False" ToolTip="Fixação não validada; permanece desabilitada."/>
      <Button x:Name="UnpinButton" Content="Desafixar" Click="Unpin_Click" IsEnabled="False"/>
      <Button Content="Reposicionar à direita" Click="Position_Click"/>
-     <Button Content="Fechar mural" Click="Close_Click"/>
+     <Button Content="Encerrar aplicativo" Click="Close_Click"/>
     </WrapPanel>
     <TextBlock x:Name="StatusText" TextWrapping="Wrap"/>
     <Expander Header="Arquivos e diagnóstico" Margin="0,6,0,0"><StackPanel>
@@ -44,4 +62,5 @@
    </ItemsControl>
   </ScrollViewer>
  </Grid>
+ </DockPanel>
 </Window>

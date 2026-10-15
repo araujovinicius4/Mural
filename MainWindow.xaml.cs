@@ -141,7 +141,15 @@ public partial class MainWindow : Window
     private void Pin_Click(object sender, RoutedEventArgs e) => StartPin();
     private void Unpin_Click(object sender, RoutedEventArgs e) => Report(desktop.Unpin());
     private void Position_Click(object sender, RoutedEventArgs e) => Report(desktop.PositionRight());
-    private void Close_Click(object sender, RoutedEventArgs e) => Close();
+    // Confirmation belongs only to the menu action, never to Windows/session shutdown.
+    private void Close_Click(object sender, RoutedEventArgs e)
+    {
+        if (MessageBox.Show(this, "Deseja encerrar o aplicativo?", "Encerrar aplicativo",
+            MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
+            Close();
+    }
+    private void MaximizeRestore_Click(object sender, RoutedEventArgs e) =>
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
     private static bool DesktopPinningEnabled => false;
     private void NewAnnouncement_Click(object sender, RoutedEventArgs e) => new AnnouncementEditorWindow(Board) { Owner = this }.ShowDialog();
     private void Settings_Click(object sender, RoutedEventArgs e) => SettingsPanel.Visibility = SettingsPanel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
