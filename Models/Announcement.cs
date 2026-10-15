@@ -33,8 +33,19 @@ public sealed class Announcement : INotifyPropertyChanged
     public LocalCooperationInterest? CooperationInterest
     {
         get => cooperationInterest;
-        set { cooperationInterest = value; Changed(); Changed(nameof(HasCooperationInterest)); }
+        set { cooperationInterest = value; Changed(); CooperationChanged(); }
     }
+    public List<CooperationRequest> CooperationRequests { get; set; } = [];
+    public AnnouncementDistribution Distribution { get; set; } = new();
+    [JsonIgnore] public string CooperationStatus => !CanCooperate ? "" :
+        CooperationRequests.LastOrDefault(x => x.Interest == CooperationInterest)?.StateLabel
+        ?? CooperationRequests.LastOrDefault()?.StateLabel ?? "Sem solicitação";
+    [JsonIgnore] public string CooperationButtonLabel => CooperationRequests.LastOrDefault(x => x.Interest == CooperationInterest)?.State
+        is null or CooperationState.InterestRegistered ? "✓ Interesse registrado" : "Acompanhar cooperação";
+    [JsonIgnore] public string CooperationButtonToolTip => CooperationRequests.LastOrDefault(x => x.Interest == CooperationInterest)?.State
+        is null or CooperationState.InterestRegistered ? "Clique para cancelar seu interesse" : "Abrir detalhes do fluxo local";
+    public void CooperationChanged() { Changed(nameof(CooperationStatus)); Changed(nameof(HasCooperationInterest));
+        Changed(nameof(CooperationButtonLabel)); Changed(nameof(CooperationButtonToolTip)); }
     [JsonIgnore] public bool HasCooperationInterest => CooperationInterest is not null;
     [JsonIgnore] public bool CanCooperate => Type is AnnouncementType.Demanda or AnnouncementType.Oferta;
     public DateTimeOffset PublishedAt { get; set; }

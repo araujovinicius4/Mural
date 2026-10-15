@@ -18,6 +18,9 @@ public partial class AnnouncementEditorWindow : Window
         InitializeComponent(); this.board = board; this.original = original;
         TypeInput.ItemsSource = AnnouncementTypes.Choices;
         TypeInput.SelectedValue = original?.Type;
+        DistributionInput.ItemsSource = Enum.GetValues<DistributionKind>().Select(x => new { Value = x, Name = AnnouncementDistribution.Label(x) });
+        DistributionInput.SelectedValue = original?.Distribution.Kind ?? DistributionKind.General;
+        DistributionCriteria.Text = string.Join(Environment.NewLine, original?.Distribution.Criteria ?? []);
         if (original is not null)
         {
             Heading.Text = original.IsExample ? "Editar exemplo demonstrativo" : "Editar anúncio";
@@ -29,6 +32,11 @@ public partial class AnnouncementEditorWindow : Window
         }
     }
     private MediaKind Kind => KindInput.SelectedIndex == 1 ? MediaKind.Video : MediaKind.Image;
+    private void Distribution_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        if (DistributionCriteria is null) return;
+        DistributionCriteria.IsEnabled = DistributionInput.SelectedValue is DistributionKind kind && kind != DistributionKind.General;
+    }
     private void Kind_Changed(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
     {
         if (Preview is null) return; // XAML initialization selects the first item.
@@ -60,7 +68,10 @@ public partial class AnnouncementEditorWindow : Window
     {
         try
         {
-            board.SaveAnnouncement(original, new AnnouncementDraft(TitleInput.Text, DescriptionInput.Text, Kind, selectedPath, UrlInput.Text, TypeInput.SelectedValue is AnnouncementType type ? type : null));
+            var distributionKind = DistributionInput.SelectedValue is DistributionKind selected ? selected : DistributionKind.General;
+            var distribution = new AnnouncementDistribution { Kind = distributionKind, Criteria = distributionKind == DistributionKind.General ? [] :
+                DistributionCriteria.Text.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Distinct(StringComparer.OrdinalIgnoreCase).ToList() };
+            board.SaveAnnouncement(original, new AnnouncementDraft(TitleInput.Text, DescriptionInput.Text, Kind, selectedPath, UrlInput.Text, TypeInput.SelectedValue is AnnouncementType type ? type : null, distribution));
             DialogResult = true;
         }
         catch (Exception ex) when (IsExpected(ex)) { ErrorText.Text = "Não foi possível salvar: " + ex.Message; }

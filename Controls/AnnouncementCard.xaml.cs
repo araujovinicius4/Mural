@@ -99,7 +99,17 @@ public partial class AnnouncementCard : UserControl
         return new DrawingImage(group);
     }
     private void CooperationInterest_Click(object sender, RoutedEventArgs e)
-    { if (announcement is not null) Board?.ToggleCooperationInterest(announcement); }
+    {
+        if (announcement is null || Board is not { } board) return;
+        var current = announcement.CooperationRequests.LastOrDefault(x => x.Interest == announcement.CooperationInterest);
+        if (current is not null && current.State != CooperationState.InterestRegistered) Details_Click(sender, e);
+        else board.ToggleCooperationInterest(announcement);
+    }
+    private void Details_Click(object sender, RoutedEventArgs e)
+    {
+        if (announcement is not null && Board is { } board)
+            new CooperationDetailsWindow(announcement, board) { Owner = Window.GetWindow(this) }.ShowDialog();
+    }
     private void Like_Click(object sender, RoutedEventArgs e) { if (announcement is not null) Board?.ToggleLike(announcement); }
     private void Comments_Click(object sender, RoutedEventArgs e)
     {

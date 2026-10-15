@@ -98,6 +98,16 @@ public sealed class BoardViewModel : INotifyPropertyChanged
         item.LikedLocally = !item.LikedLocally;
         Save();
     }
+    public bool TransitionCooperation(Announcement item, Guid id, CooperationState next, string? reason = null)
+    {
+        if (!Announcements.Contains(item) || !CooperationInterestService.Transition(item, id, next, reason)) return false;
+        Save(); return true;
+    }
+    public bool ConsentCooperation(Announcement item, Guid id, bool requester)
+    {
+        if (!Announcements.Contains(item) || !CooperationInterestService.Consent(item, id, requester)) return false;
+        Save(); return true;
+    }
     public bool AddComment(Announcement item, string text)
     {
         text = text.Trim();

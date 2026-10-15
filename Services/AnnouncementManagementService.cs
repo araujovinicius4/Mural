@@ -3,7 +3,8 @@ using MuralInstitucional.Models;
 
 namespace MuralInstitucional.Services;
 
-public sealed record AnnouncementDraft(string Title, string? Description, MediaKind Kind, string Path, string? Url, AnnouncementType? Type = null);
+public sealed record AnnouncementDraft(string Title, string? Description, MediaKind Kind, string Path, string? Url, AnnouncementType? Type = null,
+    AnnouncementDistribution? Distribution = null);
 
 public sealed class AnnouncementManagementService(IAnnouncementRepository repository, ManagedMediaService media, bool isExample = false)
 {
@@ -11,6 +12,7 @@ public sealed class AnnouncementManagementService(IAnnouncementRepository reposi
     public static void Validate(AnnouncementDraft draft)
     {
         if (draft.Type is null || !Enum.IsDefined(draft.Type.Value)) throw new InvalidDataException("Tipo de anúncio obrigatório e válido.");
+        if (draft.Distribution is not null && !AnnouncementDistribution.IsValid(draft.Distribution)) throw new InvalidDataException("Critérios de distribuição inválidos.");
         if (string.IsNullOrWhiteSpace(draft.Title) || draft.Title.Trim().Length > 200) throw new InvalidDataException("Título obrigatório, até 200 caracteres.");
         if (draft.Description?.Length > 2000) throw new InvalidDataException("Descrição deve ter até 2.000 caracteres.");
         if (!string.IsNullOrWhiteSpace(draft.Url) && !ExternalLinkService.TryValidate(draft.Url.Trim(), out _))
@@ -28,7 +30,9 @@ public sealed class AnnouncementManagementService(IAnnouncementRepository reposi
             Id = original?.Id ?? Guid.NewGuid(), IsExample = isExample, Title = draft.Title.Trim(), Description = draft.Description?.Trim(),
             Type = draft.Type!.Value, MediaKind = draft.Kind, MediaPath = path, ExternalUrl = string.IsNullOrWhiteSpace(draft.Url) ? null : draft.Url.Trim(),
             InitialLikes = original?.InitialLikes ?? 0, LikedLocally = original?.LikedLocally ?? false,
-            CooperationInterest = original?.CooperationInterest, Comments = original?.Comments ?? [], PublishedAt = original?.PublishedAt ?? DateTimeOffset.Now
+            CooperationInterest = original?.CooperationInterest, CooperationRequests = original?.CooperationRequests.ToList() ?? [],
+            Distribution = draft.Distribution ?? original?.Distribution ?? new(),
+            Comments = original?.Comments ?? [], PublishedAt = original?.PublishedAt ?? DateTimeOffset.Now
         };
         var items = existing.Where(x => x.IsExample == isExample && x.Id != result.Id).ToList(); items.Insert(0, result);
         try { repository.Save(items); }

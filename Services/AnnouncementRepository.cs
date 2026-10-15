@@ -37,6 +37,7 @@ public sealed class AnnouncementRepository : IAnnouncementRepository
             var data = JsonSerializer.Deserialize<DemoDocument>(bytes, Options)
                 ?? throw new InvalidDataException("Documento vazio.");
             Validate(data);
+            foreach (var item in data.Announcements) CooperationInterestService.Migrate(item);
             foreach (var item in data.Announcements) item.IsExample = dataKind == "local-demo";
             return data;
         }
@@ -85,7 +86,7 @@ public sealed class AnnouncementRepository : IAnnouncementRepository
         {
             if (item is null || item.Id == Guid.Empty || !ids.Add(item.Id) || string.IsNullOrWhiteSpace(item.Title)
                 || item.Title.Length > 200 || item.InitialLikes < 0 || item.InitialLikes > 1_000_000
-                || !CooperationInterestService.IsValid(item) || !Enum.IsDefined(item.Type) || !Enum.IsDefined(item.MediaKind) || item.Comments is null || item.Comments.Count > 500
+                || !CooperationInterestService.IsValid(item) || !AnnouncementDistribution.IsValid(item.Distribution) || !Enum.IsDefined(item.Type) || !Enum.IsDefined(item.MediaKind) || item.Comments is null || item.Comments.Count > 500
                 || item.Comments.Any(c => c is null || c.Id == Guid.Empty || c.AnnouncementId != item.Id
                     || string.IsNullOrWhiteSpace(c.Text) || c.Text.Length > 1000))
                 throw new InvalidDataException("Publicação demonstrativa inválida.");

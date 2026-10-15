@@ -159,6 +159,7 @@ internal static class Program
             ManagementChecks.Run(root, Check);
             ClassificationChecks.Run(root, Check);
             CooperationChecks.Run(root, Check);
+            CooperationFlowChecks.Run(root, Check);
             Console.WriteLine($"{checks} verificações concluídas. Sem Explorer, navegador ou reprodução de vídeo.");
             return 0;
         }

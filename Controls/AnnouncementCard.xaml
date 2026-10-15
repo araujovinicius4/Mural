@@ -26,7 +26,7 @@
    <StackPanel Margin="10,8,10,4">
    <DockPanel Margin="0,0,0,4">
     <Button Content="⋯" DockPanel.Dock="Right" Click="Options_Click" ToolTip="Opções do anúncio" Padding="6,0">
-     <Button.ContextMenu><ContextMenu><MenuItem Header="Editar" Click="Edit_Click"/><MenuItem Header="Excluir…" Click="Delete_Click"/></ContextMenu></Button.ContextMenu>
+     <Button.ContextMenu><ContextMenu><MenuItem Header="Detalhes e cooperação local" Click="Details_Click"/><MenuItem Header="Editar" Click="Edit_Click"/><MenuItem Header="Excluir…" Click="Delete_Click"/></ContextMenu></Button.ContextMenu>
     </Button>
     <TextBlock Text="{Binding OriginLabel}" Foreground="#69788C" FontSize="9" VerticalAlignment="Center"/>
    </DockPanel>
@@ -51,6 +51,7 @@
     <Button Content="{Binding CommentLabel}" Click="Comments_Click"/>
    </WrapPanel>
    <StackPanel x:Name="CooperationActions" Margin="0,4,0,6" Visibility="{Binding CanCooperate, Converter={StaticResource BooleanVisibility}}">
+    <TextBlock Text="{Binding CooperationStatus}" FontSize="11" Foreground="#526078" TextWrapping="Wrap" Margin="0,0,0,4"/>
     <Button x:Name="CooperationInterestButton" Click="CooperationInterest_Click" HorizontalAlignment="Left" MaxWidth="230">
      <Button.Style><Style TargetType="Button">
       <Setter Property="Content" Value="Tenho interesse em cooperar"/>
@@ -58,10 +59,10 @@
       <Setter Property="Background" Value="#F1F5FA"/><Setter Property="Foreground" Value="#193456"/>
       <Setter Property="BorderBrush" Value="#D5DFEC"/>
       <Style.Triggers><DataTrigger Binding="{Binding HasCooperationInterest}" Value="True">
-       <Setter Property="Content" Value="✓ Interesse registrado"/>
+       <Setter Property="Content" Value="{Binding CooperationButtonLabel}"/>
        <Setter Property="Background" Value="#DDF3E6"/><Setter Property="BorderBrush" Value="#74A98B"/>
        <Setter Property="FontWeight" Value="SemiBold"/>
-       <Setter Property="ToolTip" Value="Clique para cancelar seu interesse"/>
+       <Setter Property="ToolTip" Value="{Binding CooperationButtonToolTip}"/>
       </DataTrigger></Style.Triggers>
      </Style></Button.Style>
      <Button.ContentTemplate><DataTemplate><TextBlock Text="{Binding}" TextWrapping="Wrap"/></DataTemplate></Button.ContentTemplate>
