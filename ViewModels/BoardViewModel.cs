@@ -161,5 +161,14 @@ public sealed class BoardViewModel : INotifyPropertyChanged
         Announcements.Remove(item);
         Notify(service.CleanupNotice ?? "Anúncio excluído deste perfil local.");
     }
+    public Announcement ImportAnnouncement(AnnouncementImportPreview preview, bool independentCopy = false)
+    {
+        if (!CanManageUsers) throw new InvalidOperationException("Cadastro indisponível para preservar os dados existentes.");
+        var saved = AnnouncementExchangeService.Import(users!, media!, Announcements, preview, independentCopy);
+        Announcements.Insert(0, saved);
+        SelectedTypeFilter = AnnouncementTypes.Filters[0];
+        Notify("Anúncio recebido via ZIP e salvo neste perfil. Origem não autenticada.");
+        return saved;
+    }
     public event PropertyChangedEventHandler? PropertyChanged;
 }

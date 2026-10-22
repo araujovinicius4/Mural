@@ -152,6 +152,18 @@ public partial class MainWindow : Window
         WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
     private static bool DesktopPinningEnabled => false;
     private void NewAnnouncement_Click(object sender, RoutedEventArgs e) => new AnnouncementEditorWindow(Board) { Owner = this }.ShowDialog();
+    private void ImportAnnouncement_Click(object sender, RoutedEventArgs e)
+    {
+        var picker = new Microsoft.Win32.OpenFileDialog { Title = "Importar anúncio (ZIP)", Filter = "Anúncio ZIP|*.zip", CheckFileExists = true };
+        if (picker.ShowDialog(this) != true) { Board.Notify("Importação cancelada."); return; }
+        try
+        {
+            using var preview = AnnouncementExchangeService.Read(picker.FileName);
+            if (new AnnouncementImportWindow(Board, preview) { Owner = this }.ShowDialog() != true)
+                Board.Notify("Importação cancelada; nenhum anúncio foi criado.");
+        }
+        catch (Exception ex) when (ExchangeUi.IsExpected(ex)) { Board.Notify("Não foi possível importar o ZIP: " + ex.Message); }
+    }
     private void Settings_Click(object sender, RoutedEventArgs e) => SettingsPanel.Visibility = SettingsPanel.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
     private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
     private IEnumerable<AnnouncementCard> CardControls() => Descendants<AnnouncementCard>(Cards);

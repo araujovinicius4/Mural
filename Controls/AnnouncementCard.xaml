@@ -26,7 +26,7 @@
    <StackPanel Margin="10,8,10,4">
    <DockPanel Margin="0,0,0,4">
     <Button Content="⋯" DockPanel.Dock="Right" Click="Options_Click" ToolTip="Opções do anúncio" Padding="6,0">
-     <Button.ContextMenu><ContextMenu><MenuItem Header="Detalhes e cooperação local" Click="Details_Click"/><MenuItem Header="Editar" Click="Edit_Click"/><MenuItem Header="Excluir…" Click="Delete_Click"/></ContextMenu></Button.ContextMenu>
+     <Button.ContextMenu><ContextMenu><MenuItem Header="Detalhes e cooperação local" Click="Details_Click"/><MenuItem Header="Exportar anúncio (ZIP)" Click="Export_Click"/><MenuItem Header="Editar" Click="Edit_Click"/><MenuItem Header="Excluir…" Click="Delete_Click"/></ContextMenu></Button.ContextMenu>
     </Button>
     <TextBlock Text="{Binding OriginLabel}" Foreground="#69788C" FontSize="9" VerticalAlignment="Center"/>
    </DockPanel>

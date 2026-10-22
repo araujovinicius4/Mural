@@ -10,8 +10,10 @@ public enum MediaKind { Image, Video }
 public sealed class Announcement : INotifyPropertyChanged
 {
     public Guid Id { get; set; }
+    public Guid? ExchangeOriginId { get; set; }
+    public bool IsImported { get; set; }
     [JsonIgnore] public bool IsExample { get; set; } = true;
-    [JsonIgnore] public string OriginLabel => IsExample ? "EXEMPLO DEMONSTRATIVO" : "CADASTRADO NESTE PERFIL";
+    [JsonIgnore] public string OriginLabel => IsExample ? "EXEMPLO DEMONSTRATIVO" : IsImported ? "RECEBIDO VIA ZIP • ORIGEM NÃO AUTENTICADA" : "CADASTRADO NESTE PERFIL";
     // Legacy JSON without Type defaults to Comunicado and is migrated on save.
     public AnnouncementType Type { get; set; } = AnnouncementType.Comunicado;
     [JsonIgnore] public string TypeLabel => AnnouncementTypes.Name(Type);

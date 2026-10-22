@@ -28,6 +28,7 @@ public sealed class AnnouncementManagementService(IAnnouncementRepository reposi
         var result = new Announcement
         {
             Id = original?.Id ?? Guid.NewGuid(), IsExample = isExample, Title = draft.Title.Trim(), Description = draft.Description?.Trim(),
+            ExchangeOriginId = original?.ExchangeOriginId, IsImported = original?.IsImported ?? false,
             Type = draft.Type!.Value, MediaKind = draft.Kind, MediaPath = path, ExternalUrl = string.IsNullOrWhiteSpace(draft.Url) ? null : draft.Url.Trim(),
             InitialLikes = original?.InitialLikes ?? 0, LikedLocally = original?.LikedLocally ?? false,
             CooperationInterest = original?.CooperationInterest, CooperationRequests = original?.CooperationRequests.ToList() ?? [],

@@ -224,6 +224,18 @@ public partial class AnnouncementCard : UserControl
         ReleaseForManagement();
         new AnnouncementEditorWindow(board, announcement) { Owner = Window.GetWindow(this) }.ShowDialog();
     }
+    private void Export_Click(object sender, RoutedEventArgs e)
+    {
+        if (announcement is null || Board is not { } board) return;
+        var picker = new SaveFileDialog { Title = "Exportar anúncio (ZIP)", Filter = "Anúncio ZIP|*.zip", DefaultExt = ".zip", FileName = "anuncio.zip", AddExtension = true, OverwritePrompt = true };
+        if (picker.ShowDialog(Window.GetWindow(this)) != true) { board.Notify("Exportação cancelada."); return; }
+        try
+        {
+            AnnouncementExchangeService.Export(announcement, picker.FileName);
+            board.Notify("Anúncio exportado em ZIP. Interações privadas não foram incluídas.");
+        }
+        catch (Exception ex) when (ExchangeUi.IsExpected(ex)) { board.Notify("Não foi possível exportar: " + ex.Message); }
+    }
     private void Delete_Click(object sender, RoutedEventArgs e)
     {
         if (announcement is null || Board is not { } board) return;

@@ -22,6 +22,7 @@
    <WrapPanel VerticalAlignment="Center">
     <TextBlock Text="Mural Institucional" FontSize="24" FontWeight="SemiBold" Foreground="#193456" Margin="0,0,20,4" VerticalAlignment="Center"/>
     <Button Content="+ Novo anúncio" Click="NewAnnouncement_Click" IsEnabled="{Binding CanManageUsers}"/>
+    <Button Content="Importar anúncio (ZIP)" Click="ImportAnnouncement_Click" IsEnabled="{Binding CanManageUsers}"/>
     <Button Click="Settings_Click" AutomationProperties.Name="Configurações">
      <StackPanel Orientation="Horizontal">
       <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center"/>
